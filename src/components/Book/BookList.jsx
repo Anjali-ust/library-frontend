@@ -1,9 +1,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect, useState } from "react";
 import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 export default function BookList() {
+    let navigate = useNavigate();
   const bookListContainer = {
-  //  marginTop: "1px", // Pushes the content below the fixed top navbar
+   marginTop: "60px", // Pushes the content below the fixed top navbar
   //  marginLeft: "1px", // Adjust based on sidebar width
     padding: "0px",
     // fontSize: "50px",
@@ -13,6 +15,7 @@ export default function BookList() {
   };
   const baseUrl =
     "http://localhost:9090/library/book/getAllBooks";
+ const deleteUrl = "http://localhost:9090/library/book/deleteBookById";
   const [allBooks, setAllBooks] = useState([
   ]);
     useEffect(() => {
@@ -34,10 +37,16 @@ export default function BookList() {
       <td>{eachBook.bookTitle}</td>
       <td>{eachBook.bookPrice}</td>
       <td>{eachBook.bookPublished}</td>
+      <td>{eachBook.bookAuthorId == "" ? (
+        <button className="btn btn-secondary text-dark">Map</button>
+      ) : (
+        eachBook.bookAuthorId
+      )
+    }</td>
       <td>
         <button
           className="btn btn-info btn-sm me-2"
-          onClick={() => alert(`Viewing book ID: ${book.id}`)}
+          onClick={() => handleView(eachBook.bookId)}
         >
           <FaEye />
         </button>
@@ -49,7 +58,7 @@ export default function BookList() {
         </button>
         <button
           className="btn btn-danger btn-sm"
-          onClick={() => handleDelete(book.id)}
+          onClick={() => handleDelete(eachBook.bookId)}
         >
           <FaTrash />
         </button>
@@ -57,6 +66,19 @@ export default function BookList() {
     </tr>
   ));
 
+  function handleDelete(bookId){
+    fetch(deleteUrl+"/"+bookId,{method:'DELETE',headers: {
+        'Content-Type': 'application/json'}}).then((res) => res.text())
+        .then((data)=>{
+            //console.log(data);
+            setAllBooks(allBooks.filter((book) => book.bookId != bookId));
+        });
+  }
+
+  function handleView(bookId){
+    navigate("/book-view/"+bookId);
+
+  }
   return (
     <>
       <div style={bookListContainer}>
@@ -81,7 +103,7 @@ export default function BookList() {
             width: "1000px",
             //height:"100px",
             marginLeft: "200px",
-            marginTop: "10px",
+            marginTop: "50px",
             fontFamily:"cursive"
           }}
         >
@@ -90,6 +112,7 @@ export default function BookList() {
               <th>Name</th>
               <th>Price</th>
               <th>Published date</th>
+              <th>Author Id</th>
               <th></th>
             </tr>
           </thead>

@@ -24,7 +24,8 @@ export default function HomePage() {
     
     const welcomeText = {
         color: 'black',
-        fontSize : '50px'
+        fontSize : '50px',
+        marginTop:'200px'
     };
     return (
         <>

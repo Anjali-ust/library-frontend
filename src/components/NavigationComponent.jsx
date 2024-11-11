@@ -10,6 +10,7 @@ export default function NavigationComponent() {
     const toggleAuthorOptions = () => setShowAuthorOptions(!showAuthorOptions);
 
     const navbarStyle = {
+        zIndex :'1',
         display: 'flex',
         justifyContent: 'flex-end',
         alignItems: 'center',
